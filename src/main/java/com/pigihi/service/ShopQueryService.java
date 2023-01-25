@@ -13,6 +13,9 @@ import com.pigihi.entity.ShopEntity;
 import com.pigihi.repository.ShopRepository;
 
 /**
+ * Implementation class for shop query service interface <br>
+ * Handles only query requests (no modification requests)
+ * 
  * @author Ashish Sam T George
  *
  */
@@ -22,6 +25,15 @@ public class ShopQueryService implements QueryServiceInterface {
 	@Autowired
 	private ShopRepository shopRepository;
 
+	/**
+	 * Handles API request for getting information of a shop
+	 * 
+	 * @param email
+	 * @return ShopEntity
+	 * 
+	 * @see ShopEntity
+	 * 
+	 */
 	@Override
 	public ShopEntity shopInfo(String email) {
 		
@@ -30,6 +42,17 @@ public class ShopQueryService implements QueryServiceInterface {
 		
 	}
 
+	/**
+	 * Handles API request for getting information of a list of shops
+	 * 
+	 * @param shopIds Array of strings representing the shopIds
+	 * @return List<ShopEntity>
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@Override
 	public List<ShopEntity> findShopsById(List<String> shopIds) {
 		List<ShopEntity> shopEntities = (List<ShopEntity>) shopRepository.findAllById(shopIds);

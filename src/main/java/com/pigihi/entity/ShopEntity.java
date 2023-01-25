@@ -11,6 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
 /**
+ * Entity class for shop
+ * 
  * @author Ashish Sam T George
  *
  */

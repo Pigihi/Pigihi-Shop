@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * Model class for editing shop
+ * 
  * @author Ashish Sam T George
  *
  */

@@ -12,6 +12,8 @@ import com.pigihi.model.EditShopModel;
 import com.pigihi.repository.ShopRepository;
 
 /**
+ * Service class for handling requests that can modify values
+ * 
  * @author Ashish Sam T George
  *
  */
@@ -21,11 +23,33 @@ public class ShopService {
 	@Autowired
 	private ShopRepository shopRepository;
 
+	/**
+	 * Adds new shop
+	 * 
+	 * @param shopEntity
+	 * @return ShopEntity Saved shopEntity is returned
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	public ShopEntity addShop(ShopEntity shopEntity) {
 		ShopEntity shop = shopRepository.save(shopEntity);
 		return shop;
 	}
 	
+	/**
+	 * Edits already existing shop
+	 * 
+	 * @param editShopModel
+	 * @return ShopEntity Edited ShopEntity is returned
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	public ShopEntity editShop(EditShopModel editShopModel) {
 		ShopEntity shop = shopRepository.findByEmail(editShopModel.getEmail());
 		shop.setOwnerFullName(editShopModel.getOwnerFullName());
@@ -40,6 +64,17 @@ public class ShopService {
 		return shop;
 	}
 
+	/**
+	 * Disables already existing shop
+	 * 
+	 * @param email
+	 * @return ShopEntity null is returned if no shop is found
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	public ShopEntity disableShop(String email) {
 		ShopEntity shop = shopRepository.findByEmail(email);
 		if(shop != null) {
@@ -55,6 +90,17 @@ public class ShopService {
 		}
 	}
 
+	/**
+	 * Enables already existing shop
+	 * 
+	 * @param email
+	 * @return ShopEntity null is returned if no shop is found
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	public ShopEntity enabledShop(String email) {
 		ShopEntity shop = shopRepository.findByEmail(email);
 		if(shop != null) {

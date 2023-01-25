@@ -23,6 +23,8 @@ import com.pigihi.service.QueryServiceInterface;
 import com.pigihi.service.ShopService;
 
 /**
+ * Controller class for handling shop API requests
+ * 
  * @author Ashish Sam T George
  *
  */
@@ -37,6 +39,16 @@ public class ShopController {
 	@Autowired
 	private ShopService shopService;
 	
+	/**
+	 * Handles API request for getting details of shop
+	 * 
+	 * @param email String representing email of the shop which can uniquely identify it
+	 * @return JSON string representing details of the shop
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 */
 	@GetMapping
 	public String shopInfo(@RequestParam String email) {
 		
@@ -46,6 +58,17 @@ public class ShopController {
 		
 	}
 	
+	/**
+	 * Handles request for getting information of a list of shops
+	 * 
+	 * @param shopIds Array of strings representing shopIds
+	 * @return JSON string
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@GetMapping("/listShops")
 	public String getShopList(@RequestParam List<String> shopIds) {
 		
@@ -63,6 +86,17 @@ public class ShopController {
 //		
 //	}
 	
+	/**
+	 * Handles API request for adding new shops
+	 * 
+	 * @param shopEntity 
+	 * @return JSON string containing information about the newly added shop
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@PostMapping("/add")
 	public String addShop(@RequestBody ShopEntity shopEntity) {
 		ShopEntity savedShopEntity = shopService.addShop(shopEntity);
@@ -70,13 +104,38 @@ public class ShopController {
 		return shop;
 	}
 	
+	/**
+	 * Handles API request for editing already existing shops
+	 * 
+	 * @param editShopModel
+	 * @return JSON string containing information about the edited shop
+	 * 
+	 * @see EditShopModel
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@PutMapping("/edit")
 	public String editShop(@RequestBody EditShopModel editShopModel) {
+		
+		//TODO Check whether the shop already exists
+		
 		ShopEntity editedshop = shopService.editShop(editShopModel);
 		String shop = convertToJson(editedshop);
 		return shop;
 	}
 	
+	/**
+	 * Handles API request to disable already existing shop
+	 * 
+	 * @param email
+	 * @return JSON string containing information about the disabled shop
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@DeleteMapping("/disable")
 	public String disableShop(@RequestParam String email) {
 		ShopEntity disabledShop = shopService.disableShop(email);
@@ -84,6 +143,17 @@ public class ShopController {
 		return shop;
 	}
 	
+	/**
+	 * Handles API request to enable already existing shop
+	 * 
+	 * @param email
+	 * @return JSON string containing information about the enabled shop
+	 * 
+	 * @see ShopEntity
+	 * 
+	 * @author Ashish Sam T George
+	 * 
+	 */
 	@PutMapping("/enable")
 	public String enableShop(@RequestParam String email) {
 		ShopEntity enabledShop = shopService.enabledShop(email);
