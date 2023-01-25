@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.repository.Query;
 import com.pigihi.entity.ShopEntity;
 
 /**
+ * Repository class for shop
+ * 
  * @author Ashish Sam T George
  *
  */
