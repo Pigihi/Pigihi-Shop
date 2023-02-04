@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -97,7 +98,8 @@ public class ShopController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	@PostMapping("/add")
+//	@PostMapping("/add")
+	@PostMapping
 	public String addShop(@RequestBody ShopEntity shopEntity) {
 		ShopEntity savedShopEntity = shopService.addShop(shopEntity);
 		String shop = convertToJson(savedShopEntity);
@@ -115,7 +117,8 @@ public class ShopController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	@PutMapping("/edit")
+//	@PutMapping("/edit")
+	@PutMapping
 	public String editShop(@RequestBody EditShopModel editShopModel) {
 		
 		//TODO Check whether the shop already exists
@@ -136,7 +139,8 @@ public class ShopController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	@DeleteMapping("/disable")
+//	@DeleteMapping("/disable")
+	@DeleteMapping
 	public String disableShop(@RequestParam String email) {
 		ShopEntity disabledShop = shopService.disableShop(email);
 		String shop = convertToJson(disabledShop);
@@ -154,7 +158,8 @@ public class ShopController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-	@PutMapping("/enable")
+//	@PutMapping("/enable")
+	@PatchMapping
 	public String enableShop(@RequestParam String email) {
 		ShopEntity enabledShop = shopService.enabledShop(email);
 		String shop = convertToJson(enabledShop);
