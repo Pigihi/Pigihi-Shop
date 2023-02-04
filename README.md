@@ -19,7 +19,7 @@ Service for handling all shop related operations
 | Add New Shop | **POST** `/user/shop` |     | JSON String | JSON String |
 | Edit Shop | **PUT** `/user/shop` |     | JSON String | JSON String |
 | Disable Shop | **DELETE** `/user/shop` | email - String |     | JSON String |
-| Enable Shop | \*\*PATCH \*\*`/user/shop` | email - String |     | JSON String |
+| Enable Shop | **PATCH**`/user/shop` | email - String |     | JSON String |
 
 ## Configuration
 
