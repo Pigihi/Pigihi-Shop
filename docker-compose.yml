@@ -1,0 +1,32 @@
+version: "3.3"
+
+services:
+  shop-db:
+    container_name: shop-db
+    image: 'mongo'
+    restart: always
+    volumes:
+      - mongo-volume:/data/db
+      #- ./mongo-volume:/data/db
+    ports:
+      - 27022:27017
+
+  shop-service:
+    container_name: shop-service-v0.1
+    image: shop-service-v0.1-image
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 8095:8080
+    restart: always
+    depends_on:
+      - shop-db
+
+volumes:
+  mongo-volume:
+
+networks:
+  default:
+    external:
+      name: pigihi-network
