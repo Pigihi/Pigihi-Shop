@@ -52,3 +52,8 @@ spring:
 ```
 
 ## Local Deployment
+In Linux,
+
+1. Open terminal and run `docker-compose up`
+2. The application can be accessed at localhost:8095 (port 8095 is set in docker-compose)
+3. MongoDB port is set to 27022
