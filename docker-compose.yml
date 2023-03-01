@@ -18,7 +18,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8095:8080
+      - 8095:8095
     restart: always
     depends_on:
       - shop-db
