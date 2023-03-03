@@ -34,7 +34,7 @@ eureka:
     service-url:
       defaultZone: address of the eureka server (Eg: http://localhost:8761/eureka)
   instance:
-    hostname: specify the hostname here (Eg: localhost)
+    hostname: specify the hostname of service here (Eg: localhost)
 
 # Server properties
 server:
@@ -61,6 +61,7 @@ In application.yml file, change the properties
 | Property | Value | Example |
 | --- | --- | --- |
 | eureka_hostname | hostname of eureka server | service-registry |
+| service_hostname | hostname of service (try to use the same as in docker-compose) | shop-service |
 | mongodb_hostname | hostname of mongodb | shop-db |
 | mongodb\_database\_name | database name | shopDB |
 
@@ -70,10 +71,10 @@ Create docker bridge network: `docker network create -d bridge pigihi-network`
 
 docker-compose can be used to run the application and the corresponding mongodb instance
 
-1. Go to project folder
-2. Open terminal and run `docker-compose up`
-3. The application can be accessed at localhost:8095 (port 8095 is set in docker-compose)
-4. MongoDB port is set to 27022
+1.  Go to project folder
+2.  Open terminal and run `docker-compose up`
+3.  The application can be accessed at localhost:8095 (port 8095 is set in docker-compose)
+4.  MongoDB port is set to 27022
 
 To run only the application
 
