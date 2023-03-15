@@ -1,0 +1,19 @@
+# Production environment
+
+eureka_hostname: service-registry
+
+service_hostname: shop-service
+
+mongodb_hostname: shop-db
+mongodb_database_name: shopDB
+
+# Eureka properties
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://${eureka_hostname}:8761/eureka
+  instance:
+    hostname: ${service_hostname}
+
