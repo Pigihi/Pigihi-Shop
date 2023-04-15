@@ -3,9 +3,13 @@
  */
 package com.pigihi.controller;
 
+
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.pigihi.entity.ShopEntity;
+import com.pigihi.library.dataConverter.service.DataConverter;
 import com.pigihi.model.EditShopModel;
-import com.pigihi.service.QueryServiceInterface;
-import com.pigihi.service.ShopService;
+import com.pigihi.model.ShopAddressModel;
+import com.pigihi.service.ShopAddService;
+import com.pigihi.service.ShopAddressService;
+import com.pigihi.service.ShopDocumentService;
+import com.pigihi.service.ShopNameService;
+import com.pigihi.service.ShopProfileImageService;
+import com.pigihi.service.ShopQueryService;
+import com.pigihi.service.ShopStatusService;
+
 
 /**
  * Controller class for handling shop API requests
@@ -31,66 +43,59 @@ import com.pigihi.service.ShopService;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/user/shop")
+@RequestMapping("/user/shop/self")
 public class ShopController {
+
+	@Autowired
+	private ShopQueryService shopQueryService;
+
+	@Autowired
+	private ShopAddService shopAddService;
+
+	@Autowired
+	private ShopStatusService shopStatusService;
+
+	@Autowired
+	private ShopNameService shopNameService;
+
+	@Autowired
+	private ShopProfileImageService shopProfileImageService;
+
+	@Autowired
+	private ShopAddressService shopAddressService;
 	
 	@Autowired
-	private QueryServiceInterface shopQueryService;
+	private ShopDocumentService shopDocumentService;
 	
 	@Autowired
-	private ShopService shopService;
-	
+	private DataConverter dataConverter;
+
 	/**
 	 * Handles API request for getting details of shop
 	 * 
-	 * @param email String representing email of the shop which can uniquely identify it
+	 * @param email String representing email of the shop which can uniquely
+	 *              identify it
 	 * @return JSON string representing details of the shop
 	 * 
 	 * @see ShopEntity
 	 * 
 	 * @author Ashish Sam T George
+	 * 
 	 */
 	@GetMapping
-	public String shopInfo(@RequestParam String email) {
+	public String shopInfo() {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
 		
 		ShopEntity shopEntity = shopQueryService.shopInfo(email);
-		String shop = convertToJson(shopEntity);
+		String shop = dataConverter.convertToJson(shopEntity);
 		return shop;
-		
 	}
-	
-	/**
-	 * Handles request for getting information of a list of shops
-	 * 
-	 * @param shopIds Array of strings representing shopIds
-	 * @return JSON string
-	 * 
-	 * @see ShopEntity
-	 * 
-	 * @author Ashish Sam T George
-	 * 
-	 */
-	@GetMapping("/listShops")
-	public String getShopList(@RequestParam List<String> shopIds) {
-		
-		List<ShopEntity> shopEntities = shopQueryService.findShopsById(shopIds);
-		Gson gson = new Gson();
-		String shops = gson.toJson(shopEntities);
-		return shops;
-		
-	}
-	
-//	@GetMapping("/listProducts")
-//	public String getShopProducts(@RequestParam String email) {
-//		
-//		
-//		
-//	}
-	
+
 	/**
 	 * Handles API request for adding new shops
 	 * 
-	 * @param shopEntity 
+	 * @param shopEntity
 	 * @return JSON string containing information about the newly added shop
 	 * 
 	 * @see ShopEntity
@@ -98,36 +103,13 @@ public class ShopController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-//	@PostMapping("/add")
 	@PostMapping
 	public String addShop(@RequestBody ShopEntity shopEntity) {
-		ShopEntity savedShopEntity = shopService.addShop(shopEntity);
-		String shop = convertToJson(savedShopEntity);
+		ShopEntity savedShopEntity = shopAddService.addShop(shopEntity);
+		String shop = dataConverter.convertToJson(savedShopEntity);
 		return shop;
 	}
-	
-	/**
-	 * Handles API request for editing already existing shops
-	 * 
-	 * @param editShopModel
-	 * @return JSON string containing information about the edited shop
-	 * 
-	 * @see EditShopModel
-	 * 
-	 * @author Ashish Sam T George
-	 * 
-	 */
-//	@PutMapping("/edit")
-	@PutMapping
-	public String editShop(@RequestBody EditShopModel editShopModel) {
-		
-		//TODO Check whether the shop already exists
-		
-		ShopEntity editedshop = shopService.editShop(editShopModel);
-		String shop = convertToJson(editedshop);
-		return shop;
-	}
-	
+
 	/**
 	 * Handles API request to disable already existing shop
 	 * 
@@ -139,14 +121,16 @@ public class ShopController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-//	@DeleteMapping("/disable")
 	@DeleteMapping
-	public String disableShop(@RequestParam String email) {
-		ShopEntity disabledShop = shopService.disableShop(email);
-		String shop = convertToJson(disabledShop);
+	public String disableShop() throws InterruptedException, IOException {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
+		
+		ShopEntity disabledShop = shopStatusService.disableShop(email);
+		String shop = dataConverter.convertToJson(disabledShop);
 		return shop;
 	}
-	
+
 	/**
 	 * Handles API request to enable already existing shop
 	 * 
@@ -158,18 +142,61 @@ public class ShopController {
 	 * @author Ashish Sam T George
 	 * 
 	 */
-//	@PutMapping("/enable")
 	@PatchMapping
-	public String enableShop(@RequestParam String email) {
-		ShopEntity enabledShop = shopService.enabledShop(email);
-		String shop = convertToJson(enabledShop);
-		return shop;
-	}
-	
-	private String convertToJson(ShopEntity shopEntity) {
-		Gson gson = new Gson();
-		String shop = gson.toJson(shopEntity);
+	public String enableShop() throws InterruptedException, IOException {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
+		
+		ShopEntity enabledShop = shopStatusService.enableShop(email);
+		String shop = dataConverter.convertToJson(enabledShop);
 		return shop;
 	}
 
+	@PutMapping("/fullName")
+	public String changeFullName(@RequestParam String fullName) throws InterruptedException, IOException {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
+
+		ShopEntity modifiedShop = shopNameService.changeFullName(email, fullName);
+		String shopJson = dataConverter.convertToJson(modifiedShop);
+		return shopJson;
+	}
+
+	@PutMapping("/profileImage")
+	public String changeProfileImage(@RequestParam String imageUrl) {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
+
+		ShopEntity modifiedShop = shopProfileImageService.changeProfileImage(email, imageUrl);
+		String shopJson = dataConverter.convertToJson(modifiedShop);
+		return shopJson;
+	}
+	
+	@PutMapping("/documentUrl")
+	public String changeDocumentUrl(@RequestParam String documentUrl) {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
+
+		ShopEntity modifiedShop = shopDocumentService.changeDocument(email, documentUrl);
+		String shopJson = dataConverter.convertToJson(modifiedShop);
+		return shopJson;
+	}
+
+	@PutMapping("/address")
+	public String changeAddress(@RequestBody ShopAddressModel shopAddressModel) {
+		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+		String email = (String) authenticatedUser.getPrincipal();
+
+		ShopEntity modifiedShop = shopAddressService.changeAddress(email, shopAddressModel);
+		String shopJson = dataConverter.convertToJson(modifiedShop);
+		return shopJson;
+	}
+	
+//	@PostMapping("/product")
+//	public String addProducts() {
+//		Authentication authenticatedUser = SecurityContextHolder.getContext().getAuthentication();
+//		String email = (String) authenticatedUser.getPrincipal();
+//
+//	}
+	
 }
